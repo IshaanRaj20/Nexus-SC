@@ -14,7 +14,7 @@ export default defineConfig({
       includeAssets: ['favicon.svg', 'icons/*.png'],
       manifest: {
         name: 'Nexus Student Companion',
-        short_name: 'Nexus SC',
+        short_name: 'Nexus',
         description: 'Your all-in-one student productivity companion.',
         theme_color: '#155DFC',
         background_color: '#0B1220',

@@ -28,7 +28,7 @@ export default function Tasks() {
     orderByField: 'dueDate',
     direction: 'asc'
   })
-  const { awardXp } = useGamification()
+  const { completeTask, recordAdd } = useGamification()
   const [filter, setFilter] = useState('All')
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
@@ -56,7 +56,7 @@ export default function Tasks() {
   const toggleTask = (task) => {
     const nowDone = !task.done
     updateItem(task.id, { done: nowDone })
-    if (nowDone) awardXp('taskCompleted')
+    if (nowDone) completeTask(task.dueDate)
   }
   const deleteTask = (id) => removeItem(id)
 
@@ -68,6 +68,7 @@ export default function Tasks() {
         await updateItem(editingId, { ...form })
       } else {
         await addItem({ ...form, done: false })
+        recordAdd('taskAdded')
       }
       setModalOpen(false)
       setForm(emptyForm)

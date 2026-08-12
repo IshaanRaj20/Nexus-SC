@@ -30,7 +30,7 @@ export default function Dashboard() {
   const { items: tasks, loading: tasksLoading, updateItem: updateTask } = useUserCollection('tasks', { orderByField: 'dueDate', direction: 'asc' })
   const { items: notes, loading: notesLoading } = useUserCollection('notes', { orderByField: 'updatedAt', direction: 'desc' })
   const { items: exams, loading: examsLoading } = useUserCollection('exams', { orderByField: 'date', direction: 'asc' })
-  const { data: gamification, levelInfo, awardXp, loading: gamificationLoading } = useGamification()
+  const { data: gamification, levelInfo, completeTask, loading: gamificationLoading } = useGamification()
 
   const firstName = (userProfile?.name || currentUser?.displayName || currentUser?.email || 'there').split(' ')[0]
 
@@ -93,7 +93,7 @@ export default function Dashboard() {
                   <button
                     onClick={() => {
                       updateTask(task.id, { done: true })
-                      awardXp('taskCompleted')
+                      completeTask(task.dueDate)
                     }}
                     className="shrink-0 text-[var(--text-secondary)] hover:text-signal-600 transition-colors"
                     aria-label="Mark complete"

@@ -30,7 +30,7 @@ export default function Quizzes() {
     direction: 'desc'
   })
 
-  const { awardXp } = useGamification()
+  const { awardXp, recordAdd } = useGamification()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [aiInfoOpen, setAiInfoOpen] = useState(false)
@@ -110,6 +110,7 @@ export default function Quizzes() {
         bestScore: null,
         attempts: 0
       })
+      recordAdd('quizCreated')
 
       setAiInfoOpen(false)
     } catch (err) {
@@ -155,6 +156,7 @@ export default function Quizzes() {
         bestScore: null,
         attempts: 0
       })
+      recordAdd('quizCreated')
 
       setModalOpen(false)
       setForm(emptyForm)
@@ -498,20 +500,45 @@ export default function Quizzes() {
   )
 }
 
-function QuizRunner({ quiz, onExit, onFinish, awardXp }) {
-  const [answers, setAnswers] = useState(Array(quiz.questions.length).fill(null))
+function QuizRunner({
+  quiz,
+  onExit,
+  onFinish,
+  awardXp
+}) {
+  const [answers, setAnswers] = useState(
+    Array(quiz.questions.length).fill(null)
+  )
+
   const [submitted, setSubmitted] = useState(false)
   const [score, setScore] = useState(null)
 
   const submit = async () => {
     const computedScore = Math.round(
-      (answers.filter((a, i) => a === quiz.questions[i].correctIndex).length / quiz.questions.length) * 100
+      (answers.filter(
+        (a, i) => a === quiz.questions[i].correctIndex
+      ).length /
+        quiz.questions.length) *
+        100
     )
+
     setScore(computedScore)
     setSubmitted(true)
-    const newBest = quiz.bestScore === null || quiz.bestScore === undefined ? computedScore : Math.max(quiz.bestScore, computedScore)
-    await onFinish(quiz.id, { bestScore: newBest, attempts: (quiz.attempts || 0) + 1 })
-    awardXp('quizTaken', { perfect: computedScore === 100 })
+
+    const newBest =
+      quiz.bestScore === null ||
+      quiz.bestScore === undefined
+        ? computedScore
+        : Math.max(quiz.bestScore, computedScore)
+
+    await onFinish(quiz.id, {
+      bestScore: newBest,
+      attempts: (quiz.attempts || 0) + 1
+    })
+
+    awardXp('quizTaken', {
+      perfect: computedScore === 100
+    })
   }
 
   const allAnswered = answers.every(
